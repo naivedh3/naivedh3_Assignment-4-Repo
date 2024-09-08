@@ -1,0 +1,38 @@
+5: Donation Smart Contract: Allows individuals to donate or transfer money from their personal accounts to various recipients.
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Donation {
+    address public owner;
+
+    // Event to log donations
+    event DonationReceived(address indexed donor, uint amount);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Modifier to restrict actions to the owner
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can perform this action");
+        _;
+    }
+
+    // Function to donate to the contract
+    function donate() public payable {
+        require(msg.value > 0, "Donation must be greater than zero");
+        emit DonationReceived(msg.sender, msg.value);
+    }
+
+    // Function to withdraw funds by the owner
+    function withdraw(uint amount) public onlyOwner {
+        require(address(this).balance >= amount, "Insufficient balance");
+        payable(owner).transfer(amount);
+    }
+
+    // Function to check the contract's balance
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+}

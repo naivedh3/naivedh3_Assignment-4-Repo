@@ -1,0 +1,17 @@
+2. Finding an Input String That Starts with a Specific Prefix and a Specific Hash Prefix
+
+import hashlib
+
+def find_hash_with_prefix_and_input(start_prefix, hash_prefix, max_nonce=1000000):
+    for nonce in range(max_nonce):
+        text = f"{start_prefix}{nonce}".encode()
+        hash_result = hashlib.sha256(text).hexdigest()
+        if hash_result.startswith(hash_prefix):
+            return text.decode(), hash_result
+    return None, None
+
+start_prefix = "devadnani26"
+hash_prefix = "00000"
+result, hash_value = find_hash_with_prefix_and_input(start_prefix, hash_prefix)
+print(f"Input: {result}")
+print(f"Hash: {hash_value}")

@@ -1,0 +1,26 @@
+3. Finding a Nonce for a Specific Input to Get a Hash with a Certain Prefix
+
+const crypto = require('crypto');
+
+// Function to find a nonce for a specific input string with a desired hash prefix
+function findNonceForInput(inputString, hashPrefix, maxNonce = 1000000) {
+    for (let nonce = 0; nonce < maxNonce; nonce++) {
+        const text = `${inputString}${nonce}`;
+        const hash = crypto.createHash('sha256').update(text).digest('hex');
+        if (hash.startsWith(hashPrefix)) {
+            return { nonce, hash };
+        }
+    }
+    return { nonce: null, hash: null };
+}
+
+const inputString = "Dev => Karan | Rs 100\nKaran => Darsh | Rs 10";
+const hashPrefix = "00000";
+const result = findNonceForInput(inputString, hashPrefix);
+
+if (result.nonce !== null) {
+    console.log(`Nonce: ${result.nonce}`);
+    console.log(`Hash: ${result.hash}`);
+} else {
+    console.log("No valid nonce found within the range.");
+}
